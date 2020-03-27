@@ -30,3 +30,8 @@ allprojects {
         }
     }
 }
+
+//gradle -q hello
+task hello {
+    println 'Hello world!'
+}
