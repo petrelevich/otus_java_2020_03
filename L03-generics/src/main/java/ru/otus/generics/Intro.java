@@ -11,8 +11,8 @@ import java.util.List;
 public class Intro {
 
   public static void main(String[] args) {
-    //new Intro().beforeGenerics();
-    new Intro().generics();
+    new Intro().beforeGenerics();
+//    new Intro().generics();
   }
 
   //До Generics
