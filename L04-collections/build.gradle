@@ -7,6 +7,6 @@ targetCompatibility = JavaVersion.VERSION_13
 
 dependencies {
     testImplementation 'org.openjdk.jmh:jmh-core'
-    testImplementation 'org.openjdk.jmh:jmh-generator-annprocess'
+    testAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine'
 }
