@@ -1,0 +1,11 @@
+dontinline,*.*_all_jmhStub
+dontinline,*.*_avgt_jmhStub
+dontinline,*.*_sample_jmhStub
+dontinline,*.*_ss_jmhStub
+dontinline,*.*_thrpt_jmhStub
+inline,ru/otus/JMHexample.ArrayListTest
+inline,ru/otus/JMHexample.myArrayIntTest
+inline,ru/otus/JMHexample.setup
+inline,ru/otus/JMHmap.hashMapTest
+inline,ru/otus/JMHmap.myMapTest
+inline,ru/otus/JMHmap.setup
