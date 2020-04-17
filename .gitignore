@@ -33,3 +33,4 @@ build
 *.iws
 *.ipr
 *.idea
+generated_tests
