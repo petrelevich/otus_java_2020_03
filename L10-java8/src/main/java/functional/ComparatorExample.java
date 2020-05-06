@@ -29,6 +29,7 @@ public class ComparatorExample {
     Collections.sort(list, (String s1, String s2) -> {return s1.length() - s2.length();});
 
     // Типы можно вывести
+
     Collections.sort(list, (s1, s2) -> {return s1.length() - s2.length();});
 
     Collections.sort(list, Comparator.comparingInt(s -> s.length()));

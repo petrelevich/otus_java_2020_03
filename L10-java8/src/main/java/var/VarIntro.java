@@ -21,9 +21,9 @@ public class VarIntro {
   //private var test(var val) throws IOException { Ошибка компиляции
   private String test(int val) throws IOException {
     var example = "ValueStr"; //String
-    //        example = "newString";
-    //        example = 5; //нельзя изменить тип
-    //        var error = null; //ошибка, тип неопределен
+//            example = "newString";
+//            example = 5; //нельзя изменить тип
+//            var error = null; //ошибка, тип неопределен
 
     try (InputStream is = new FileInputStream("lines.txt")) {
 
@@ -41,9 +41,9 @@ public class VarIntro {
     }
 
 
-    //    var nameList = new ArrayList<>(); //тоже не понятен тип
-    //    nameList.add("kjbdfag");
-    //    nameList.add(12342);
+    var nameList = new ArrayList<>(); //тоже не понятен тип
+        nameList.add("kjbdfag");
+        nameList.add(12342);
     var stringList = new ArrayList<String>(); //а тут уже все ясно
 
     //Посмотрите на var в debug
@@ -54,7 +54,14 @@ public class VarIntro {
       System.out.println("testString is String");
     }
 
+    final var listOfString = some();
+
     return "";
+  }
+
+  public List<String> some(){
+    var list = new ArrayList<String>();
+    return list;
   }
 
 

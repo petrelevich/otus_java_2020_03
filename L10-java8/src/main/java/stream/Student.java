@@ -14,5 +14,10 @@ class Student {
   @Builder.Default
   int course = 5;
 
+  @Builder.Default
+  int cost = 100;
+
   double avgMark;
+
+
 }
