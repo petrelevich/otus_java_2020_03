@@ -34,3 +34,6 @@ build
 *.ipr
 *.idea
 generated_tests
+
+gradlew
+gradlew.*
