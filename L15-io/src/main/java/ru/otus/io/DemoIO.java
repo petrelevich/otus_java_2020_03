@@ -26,10 +26,10 @@ public class DemoIO {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         System.out.println("current dir: " + System.getProperty("user.dir"));
-        //copyFile();
-        //writeObject();
-        //readObject();
-        //writeTextFile();
+        //  copyFile();
+        // writeObject();
+        readObject();
+       // writeTextFile();
         //readTextFile();
 
     }
@@ -57,7 +57,6 @@ public class DemoIO {
             var person = new Person(92, "SerialPerson", "hidden");
             System.out.println("serializing:" + person);
             objectOutputStream.writeObject(person);
-            objectOutputStream.flush();
         }
     }
 
@@ -73,7 +72,7 @@ public class DemoIO {
     private static void writeTextFile() throws IOException {
         var line1 = "Hello Java, str1";
         var line2 = "Hello Java, str2";
-        try (var bufferedWriter = new BufferedWriter(new FileWriter(TEXT_FILE));) {
+        try (var bufferedWriter = new BufferedWriter(new FileWriter(TEXT_FILE))) {
             bufferedWriter.write(line1);
             bufferedWriter.newLine();
             bufferedWriter.write(line2);

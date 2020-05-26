@@ -35,6 +35,5 @@ public class Demo {
       var messageIn = HelloWorld.HelloMessage.parseFrom(fileInputStream);
       System.out.println("messageIn:" + messageIn.getMessage() + ",  array:" + messageIn.getArrayIntDataList());
     }
-
   }
 }

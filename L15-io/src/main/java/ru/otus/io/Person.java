@@ -13,7 +13,7 @@ public class Person implements Serializable {
     private final String name;
     private final transient String hidden; //transient - поле будет пропущено при сериализации
 
-    //public String newField ="ddd";  //опыт с полем
+  //  public String newField ="ddd";  //опыт с полем
 
     // Обратите внимание на то, сколько раз вызывается констурктор и сколько объектов создается
     Person(int age, String name, String hidden) {
