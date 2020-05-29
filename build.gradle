@@ -36,6 +36,7 @@ allprojects {
             dependency("org.ow2.asm:asm-commons:${Versions.asm}")
             dependency("org.glassfish:javax.json:${Versions.glassfishJson}")
             dependency("com.google.protobuf:protobuf-java-util:${Versions.protobuf}")
+            dependency("javax.xml.bind:jaxb-api:${Versions.jaxbApi}")
         }
     }
 
