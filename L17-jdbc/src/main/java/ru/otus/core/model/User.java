@@ -5,27 +5,27 @@ package ru.otus.core.model;
  * created on 03.02.19.
  */
 public class User {
-  private final long id;
-  private final String name;
+    private final long id;
+    private final String name;
 
-  public User(long id, String name) {
-    this.id = id;
-    this.name = name;
-  }
+    public User(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
-  public long getId() {
-    return id;
-  }
+    public long getId() {
+        return id;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  @Override
-  public String toString() {
-    return "User{" +
-        "id=" + id +
-        ", name='" + name + '\'' +
-        '}';
-  }
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
