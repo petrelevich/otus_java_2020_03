@@ -19,10 +19,10 @@ public class DbServiceUserImpl implements DBServiceUser {
 
     @Override
     public long saveUser(User user) {
-        try (SessionManager sessionManager = userDao.getSessionManager()) {
+        try (var sessionManager = userDao.getSessionManager()) {
             sessionManager.beginSession();
             try {
-                long userId = userDao.insertUser(user);
+                var userId = userDao.insertUser(user);
                 sessionManager.commitSession();
 
                 logger.info("created user: {}", userId);
@@ -37,7 +37,7 @@ public class DbServiceUserImpl implements DBServiceUser {
 
     @Override
     public Optional<User> getUser(long id) {
-        try (SessionManager sessionManager = userDao.getSessionManager()) {
+        try (var sessionManager = userDao.getSessionManager()) {
             sessionManager.beginSession();
             try {
                 Optional<User> userOptional = userDao.findById(id);

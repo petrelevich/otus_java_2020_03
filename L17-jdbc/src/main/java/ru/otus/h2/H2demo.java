@@ -17,59 +17,54 @@ import org.slf4j.LoggerFactory;
 public class H2demo {
     private static final String URL = "jdbc:h2:mem:";
     private static final Logger logger = LoggerFactory.getLogger(H2demo.class);
-    private final Connection connection;
-
-    private H2demo() throws SQLException {
-        this.connection = DriverManager.getConnection(URL);
-        this.connection.setAutoCommit(false);
-    }
 
     public static void main(String[] args) throws SQLException {
         H2demo demo = new H2demo();
-        demo.createTable();
-        int id = 1;
-        demo.insertRecord(id);
-        demo.selectRecord(id);
-        demo.close();
+        try (var connection = getConnection()) {
+            demo.createTable(connection);
+            int id = 1;
+            demo.insertRecord(connection, id);
+            demo.selectRecord(connection, id);
+        }
     }
 
-    private void createTable() throws SQLException {
+    private static Connection getConnection() throws SQLException {
+        var connection = DriverManager.getConnection(URL);
+        connection.setAutoCommit(false);
+        return connection;
+    }
+
+    private void createTable(Connection connection) throws SQLException {
         try (PreparedStatement pst = connection.prepareStatement("create table test(id int, name varchar(50))")) {
             pst.executeUpdate();
         }
     }
 
-    private void insertRecord(int id) throws SQLException {
+    private void insertRecord(Connection connection, int id) throws SQLException {
         try (PreparedStatement pst = connection.prepareStatement("insert into test(id, name) values (?, ?)")) {
-            Savepoint savePoint = this.connection.setSavepoint("savePointName");
+            Savepoint savePoint = connection.setSavepoint("savePointName");
             pst.setInt(1, id);
             pst.setString(2, "NameValue");
             try {
                 int rowCount = pst.executeUpdate(); //Блокирующий вызов
-                this.connection.commit();
+                connection.commit();
                 logger.info("inserted rowCount: {}", rowCount);
             } catch (SQLException ex) {
-                this.connection.rollback(savePoint);
+                connection.rollback(savePoint);
                 logger.error(ex.getMessage(), ex);
             }
         }
     }
 
-    private void selectRecord(int id) throws SQLException {
-        try (PreparedStatement pst = this.connection.prepareStatement("select name from test where id  = ?")) {
+    private void selectRecord(Connection connection, int id) throws SQLException {
+        try (PreparedStatement pst = connection.prepareStatement("select name from test where id  = ?")) {
             pst.setInt(1, id);
             try (ResultSet rs = pst.executeQuery()) {
-                StringBuilder outString = new StringBuilder();
-                outString.append("name:");
                 if (rs.next()) {
-                    outString.append(rs.getString("name"));
+                    var name = rs.getString("name");
+                    logger.info("name:{}", name);
                 }
-                logger.info(outString.toString());
             }
         }
-    }
-
-    private void close() throws SQLException {
-        this.connection.close();
     }
 }

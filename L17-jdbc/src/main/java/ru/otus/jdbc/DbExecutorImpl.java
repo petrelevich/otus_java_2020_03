@@ -23,7 +23,7 @@ public class DbExecutorImpl<T> implements DbExecutor<T> {
     @Override
     public long executeInsert(Connection connection, String sql, List<Object> params) throws SQLException {
         Savepoint savePoint = connection.setSavepoint("savePointName");
-        try (PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (var pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             for (int idx = 0; idx < params.size(); idx++) {
                 pst.setObject(idx + 1, params.get(idx));
             }
@@ -40,10 +40,11 @@ public class DbExecutorImpl<T> implements DbExecutor<T> {
     }
 
     @Override
-    public Optional<T> executeSelect(Connection connection, String sql, long id, Function<ResultSet, T> rsHandler) throws SQLException {
-        try (PreparedStatement pst = connection.prepareStatement(sql)) {
+    public Optional<T> executeSelect(Connection connection, String sql, long id,
+                                     Function<ResultSet, T> rsHandler) throws SQLException {
+        try (var pst = connection.prepareStatement(sql)) {
             pst.setLong(1, id);
-            try (ResultSet rs = pst.executeQuery()) {
+            try (var rs = pst.executeQuery()) {
                 return Optional.ofNullable(rsHandler.apply(rs));
             }
         }

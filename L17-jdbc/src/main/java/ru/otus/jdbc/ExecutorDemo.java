@@ -22,27 +22,34 @@ public class ExecutorDemo {
     public static void main(String[] args) throws SQLException {
         ExecutorDemo demo = new ExecutorDemo();
 
-        try (Connection connection = DriverManager.getConnection(URL)) {
-            connection.setAutoCommit(false);
+        try (Connection connection = getConnection()) {
             demo.createTable(connection);
 
             DbExecutorImpl<User> executor = new DbExecutorImpl<>();
-            long userId = executor.executeInsert(connection, "insert into user(name) values (?)", Collections.singletonList("testUserName"));
+            long userId = executor.executeInsert(connection, "insert into user(name) values (?)",
+                    Collections.singletonList("testUserName"));
             logger.info("created user:{}", userId);
             connection.commit();
 
-            Optional<User> user = executor.executeSelect(connection, "select id, name from user where id  = ?", userId, resultSet -> {
-                try {
-                    if (resultSet.next()) {
-                        return new User(resultSet.getLong("id"), resultSet.getString("name"));
-                    }
-                } catch (SQLException e) {
-                    logger.error(e.getMessage(), e);
-                }
-                return null;
-            });
-            System.out.println(user);
+            Optional<User> user = executor.executeSelect(connection, "select id, name from user where id  = ?",
+                    userId, rs -> {
+                        try {
+                            if (rs.next()) {
+                                return new User(rs.getLong("id"), rs.getString("name"));
+                            }
+                        } catch (SQLException e) {
+                            logger.error(e.getMessage(), e);
+                        }
+                        return null;
+                    });
+            logger.info("user:{}", user);
         }
+    }
+
+    private static Connection getConnection() throws SQLException {
+        var connection = DriverManager.getConnection(URL);
+        connection.setAutoCommit(false);
+        return connection;
     }
 
     private void createTable(Connection connection) throws SQLException {

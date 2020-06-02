@@ -16,7 +16,7 @@ public class DataSourceH2 implements DataSource {
 
     @Override
     public Connection getConnection() throws SQLException {
-        Connection connection = DriverManager.getConnection(URL);
+        var connection = DriverManager.getConnection(URL);
         connection.setAutoCommit(false);
         return connection;
     }
