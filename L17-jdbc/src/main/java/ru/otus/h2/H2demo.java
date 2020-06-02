@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  */
 public class H2demo {
     private static final String URL = "jdbc:h2:mem:";
-    private static Logger logger = LoggerFactory.getLogger(H2demo.class);
+    private static final Logger logger = LoggerFactory.getLogger(H2demo.class);
     private final Connection connection;
 
     private H2demo() throws SQLException {
