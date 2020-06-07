@@ -1,16 +1,12 @@
 package ru.otus;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Optional;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.core.dao.UserDao;
 import ru.otus.jdbc.dao.UserDaoJdbc;
-import ru.otus.core.service.DBServiceUser;
 import ru.otus.core.service.DbServiceUserImpl;
 import ru.otus.jdbc.DbExecutorImpl;
 import ru.otus.h2.DataSourceH2;
