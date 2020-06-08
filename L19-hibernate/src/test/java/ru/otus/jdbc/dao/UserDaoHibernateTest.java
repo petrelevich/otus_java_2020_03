@@ -46,7 +46,8 @@ class UserDaoHibernateTest extends AbstractHibernateTest {
     void shouldCorrectSaveUser() {
         User expectedUser = new User(0, "Вася");
         sessionManagerHibernate.beginSession();
-        long id = userDaoHibernate.insertOrUpdate(expectedUser);
+        userDaoHibernate.insertOrUpdate(expectedUser);
+        long id = expectedUser.getId();
         sessionManagerHibernate.commitSession();
 
         assertThat(id).isGreaterThan(0);
@@ -56,7 +57,8 @@ class UserDaoHibernateTest extends AbstractHibernateTest {
 
         expectedUser = new User(id, "Не Вася");
         sessionManagerHibernate.beginSession();
-        long newId = userDaoHibernate.insertOrUpdate(expectedUser);
+        userDaoHibernate.insertOrUpdate(expectedUser);
+        long newId = expectedUser.getId();
         sessionManagerHibernate.commitSession();
 
         assertThat(newId).isGreaterThan(0).isEqualTo(id);

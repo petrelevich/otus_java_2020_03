@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.core.dao.UserDao;
 import ru.otus.core.model.User;
@@ -47,9 +48,13 @@ class DbServiceUserImplTest {
     @Test
     @DisplayName(" корректно сохранять пользователя")
     void shouldCorrectSaveUser() {
-        given(userDao.insertOrUpdate(any())).willReturn(USER_ID);
+        var vasya = new User();
+        doAnswer(invocation ->{
+            vasya.setId(USER_ID);
+            return null;
+        }).when(userDao).insertOrUpdate(vasya);
 
-        long id = dbServiceUser.saveUser(new User());
+        long id = dbServiceUser.saveUser(vasya);
         assertThat(id).isEqualTo(USER_ID);
     }
 
@@ -67,7 +72,7 @@ class DbServiceUserImplTest {
     @Test
     @DisplayName(" при сохранении пользователя, открывать и откатывать транзакцию в нужном порядке")
     void shouldOpenAndRollbackTranWhenExceptionInExpectedOrder() {
-        given(userDao.insertOrUpdate(any())).willThrow(IllegalArgumentException.class);
+        doThrow(IllegalArgumentException.class).when(userDao).insertOrUpdate(any());
 
         assertThatThrownBy(() -> dbServiceUser.saveUser(null))
                 .isInstanceOf(DbServiceException.class)
