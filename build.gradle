@@ -37,6 +37,9 @@ allprojects {
             dependency("org.glassfish:javax.json:${Versions.glassfishJson}")
             dependency("com.google.protobuf:protobuf-java-util:${Versions.protobuf}")
             dependency("javax.xml.bind:jaxb-api:${Versions.jaxbApi}")
+            dependency("org.postgresql:postgresql:${Versions.postgresql}")
+            dependency("org.testcontainers:junit-jupiter:${Versions.testcontainers}")
+            dependency("org.testcontainers:postgresql:${Versions.testcontainers}")
         }
     }
 
