@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+Примеры маппинга можно посмотреть здесь:
+https://mybatis.org/mybatis-3/sqlmap-xml.html
+-->
+<mapper namespace="testMapper">
+
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+
+  <resultMap type="ru.otus.mybatis.model.Sample" id="testMap">
+    <id column="id" property="id"/>
+    <result column="name" property="firstName"/>
+  </resultMap>
+
+  <select id="selectTestOne" resultType="ru.otus.mybatis.model.Sample" resultMap="testMap">
+    select * from Test where id = #{id}
+  </select>
+
+  <select id="selectTestAll" resultMap="testMap">
+    select * from Test where id between #{minId} and #{maxId}
+  </select>
+
+  <select id="selectTestLike" resultMap="testMap">
+    select * from Test where id > 50
+    <if test="nameParam != null">
+      and name like #{nameParam}
+    </if>
+  </select>
+
+  <select id="selectTestForEach" resultMap="testMap">
+    <!--  select * from Test where id in (1,2,3,4) -->
+    select * from Test where id in
+    <foreach item="item" index="index" collection="list"
+             open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <insert id="insert">
+    insert into test (id, name) values (#{id}, #{name})
+  </insert>
+
+</mapper>
