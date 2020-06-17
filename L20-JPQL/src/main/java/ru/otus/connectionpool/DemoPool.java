@@ -17,7 +17,7 @@ import java.sql.Savepoint;
  * created on 08.10.18.
  */
 public class DemoPool {
-    private static Logger logger = LoggerFactory.getLogger(DemoPool.class);
+    private static final Logger logger = LoggerFactory.getLogger(DemoPool.class);
     private static final String URL = "jdbc:h2:mem:testDB;DB_CLOSE_DELAY=-1";
     private DataSource dataSourcePool;
 
