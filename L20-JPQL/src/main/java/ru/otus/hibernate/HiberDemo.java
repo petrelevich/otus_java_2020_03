@@ -42,7 +42,7 @@ public class HiberDemo {
 //        demo.fetchExample();
 //        demo.JPQLexample();
 //        demo.deleteFrom();
-        demo.nativeExample();
+//        demo.nativeExample();
     }
 
     private HiberDemo() {
@@ -111,7 +111,7 @@ public class HiberDemo {
             person.setNickName("Durak");
             person.setAddress("derv str");
             session.persist(person);
-            System.out.println(person);
+            logger.info("person:{}", person);
 
             transaction.commit();
 
