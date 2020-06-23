@@ -8,4 +8,21 @@ public interface Versions {
     String jaxbApi = "2.3.1";
     String testcontainers = "1.13.0";
     String postgresql = "42.2.5";
+
+    String lombok = "1.18.12";
+    String gson = "2.8.6";
+
+
+    String mongodb = "3.12.4";
+    String mongodbReactive = "1.13.0";
+    String cassandra = "3.8.0";
+    String neo4j = "4.0.0";
+    String jedis = "3.2.0";
+
+    String jetty = "9.4.27.v20200227";
+    String freemarker = "2.3.28";
+    String reflections = "0.9.12";
+
+    String apacheCommons = "3.9";
+
 }
