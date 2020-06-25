@@ -137,6 +137,11 @@ public class ReferenceDemo {
         logger.info("resObject: {}", resObject);
     }
 
+    /*
+        Внимание!
+        Не используйте этот код в домашней работе.
+        Это иллюстрация идеи применения ReferenceQueue, а не готовое решение.
+     */
     private static void phantomDemo() throws InterruptedException {
         var a = new BigObject();
         ReferenceQueue<BigObject> refQueue = new ReferenceQueue<>();
