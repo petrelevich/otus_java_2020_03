@@ -57,7 +57,7 @@ public class Demo {
 
             System.out.println("\n");
 
-            val allPhones = repository.findAll(Phone.class);
+            val allPhones = repository.findAll(SmartPhone.class);
             System.out.println("All phones from db:\n" + allPhones.stream()
                     .map(Objects::toString).collect(Collectors.joining("\n")));
         }

@@ -47,14 +47,13 @@ public class Neo4jPhoneUserRepository implements PhoneUserRepository {
             Result result = session.run("MATCH (n:PhoneUser {id: $id}) " +
                     "RETURN \"{id: \" + n.id + \", " +
                     "name: \" + n.name + \"}\" as res", Map.of("id", id));
-            Optional<PhoneUser> phoneUser = result.list().stream()
-                    .map(r -> mapper.fromJson(r.get("res").asString(), PhoneUser.class))
-                    .findFirst();
-
-            List<Phone> phones = phoneRepository.findAllByUserId(id);
-            phoneUser.ifPresent(u -> u.setPhones(phones));
-
-            return phoneUser;
+            return Optional.ofNullable(result.single().get("res"))
+                    .map(r -> mapper.fromJson(r.asString(), PhoneUser.class))
+                    .map(u -> {
+                        List<Phone> phones = phoneRepository.findAllByUserId(id);
+                        u.setPhones(phones);
+                        return u;
+                    });
         }
     }
 

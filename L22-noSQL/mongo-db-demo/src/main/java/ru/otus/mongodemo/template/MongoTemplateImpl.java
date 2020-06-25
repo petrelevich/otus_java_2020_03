@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.mongodb.client.model.Filters.eq;
+
 @RequiredArgsConstructor
 public class MongoTemplateImpl implements MongoTemplate {
     private static final TypeReference<Map<String, Object>> STR_OBJECT_MAP_TYPE_REF = new TypeReference<>() {};
@@ -31,8 +33,8 @@ public class MongoTemplateImpl implements MongoTemplate {
     }
 
     @Override
-    public <T> Optional<T> findOne(Bson query, Class<T> tClass) {
-        val document = collection.find(query).first();
+    public <T> Optional<T> findOne(ObjectId id, Class<T> tClass) {
+        val document = collection.find(eq("_id", id)).first();
         return Optional.ofNullable(document).map(d -> document2Object(d, tClass));
     }
 

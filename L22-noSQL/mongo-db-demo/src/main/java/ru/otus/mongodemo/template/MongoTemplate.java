@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface MongoTemplate {
     <T> ObjectId insert(T value);
 
-    <T> Optional<T> findOne(Bson query, Class<T> tClass) throws Exception;
+    <T> Optional<T> findOne(ObjectId id, Class<T> tClass) throws Exception;
 
     <T> List<T> find(Bson query, Class<T> tClass) throws Exception;
     <T> List<T> findAll(Class<T> tClass) throws Exception;

@@ -7,6 +7,7 @@ import lombok.val;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Result;
 import ru.otus.neo4jdemo.model.Phone;
+import ru.otus.neo4jdemo.model.PhoneUser;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +43,8 @@ public class Neo4jPhoneRepository implements PhoneRepository {
                     "model: \" + n.model + \", " +
                     "color: \" + n.color + \", " +
                     "serialNumber: \" + n.serialNumber + \"}\" as res", Map.of("id", id));
-            return result.list().stream().map(r -> mapper.fromJson(r.get("res").asString(), Phone.class)).findFirst();
+            return Optional.ofNullable(result.single().get("res"))
+                    .map(r ->  mapper.fromJson(r.asString(), Phone.class));
         }
     }
 
