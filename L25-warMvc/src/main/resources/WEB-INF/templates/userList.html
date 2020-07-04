@@ -61,7 +61,7 @@
     </style>
 </head>
 <body>
-    <h3>Users:</h3>
+    <h3>Пользователи:</h3>
 
     <table class="users">
         <thead>
@@ -78,6 +78,11 @@
         </tbody>
     </table>
     <a th:href="@{/user/create}" href="userCreate.html">New user</a>
+
+    <br/><br/>
+    <h3>Тест View без контроллера:</h3>
+    <a th:href="@{/no-handler-view}">Перейти на View без контроллера</a>
+
 
     <br/><br/>
     <h3>API:</h3>
