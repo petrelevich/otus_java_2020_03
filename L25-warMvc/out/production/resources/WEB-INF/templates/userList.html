@@ -50,18 +50,24 @@
         .single-button-container {
             margin-left: 158px;
         }
+
+        h3 {
+            background: url("../static/listmark.png") no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
     </style>
 
     <style th:inline="text">
         h3 {
-            background: url([[@{/listmark.png}]]) no-repeat;
+            background: url([[@{/static/listmark.png}]]) no-repeat;
             padding: 2px;
             padding-left: 30px;
         }
     </style>
 </head>
 <body>
-    <h3>Users:</h3>
+    <h3>Пользователи:</h3>
 
     <table class="users">
         <thead>
@@ -78,6 +84,11 @@
         </tbody>
     </table>
     <a th:href="@{/user/create}" href="userCreate.html">New user</a>
+
+    <br/><br/>
+    <h3>Тест View без контроллера:</h3>
+    <a th:href="@{/no-handler-view}">Перейти на View без контроллера</a>
+
 
     <br/><br/>
     <h3>API:</h3>

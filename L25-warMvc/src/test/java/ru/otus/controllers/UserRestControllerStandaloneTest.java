@@ -1,5 +1,7 @@
 package ru.otus.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-class UserRestControllerTest {
+class UserRestControllerStandaloneTest {
 
     private MockMvc mvc;
 
@@ -30,10 +32,11 @@ class UserRestControllerTest {
 
     @Test
     void getUserById() throws Exception {
-        given(usersService.findById(1L)).willReturn(new User(1, "Vasya"));
+        User expectedUser = new User(1, "Vasya");
+        Gson gson = new GsonBuilder().create();
+        given(usersService.findById(1L)).willReturn(expectedUser);
         mvc.perform(get("/api/user/{id}", 1L))
                 .andExpect(status().isOk())
-                .andExpect(content().string("{\"id\":1,\"name\":\"Vasya\"}"))
-                .andReturn();
+                .andExpect(content().string(gson.toJson(expectedUser)));
     }
 }

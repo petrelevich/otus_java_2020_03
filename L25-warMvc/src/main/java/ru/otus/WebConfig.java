@@ -4,14 +4,17 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @ComponentScan
@@ -59,6 +62,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations("/WEB-INF/static/");
+        registry.addResourceHandler("/static/**").addResourceLocations("/WEB-INF/static/");
     }
+
 }

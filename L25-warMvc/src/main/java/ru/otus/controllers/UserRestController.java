@@ -23,6 +23,11 @@ public class UserRestController {
         return usersService.findByName(name);
     }
 
+    @PostMapping("/api/user")
+    public User saveUser(@RequestBody User user) {
+        return usersService.save(user);
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/api/user/random")
     public User findRandom() {
         return usersService.findRandom();
