@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.3.1.RELEASE'
+}
+
+sourceCompatibility = JavaVersion.VERSION_13
+targetCompatibility = JavaVersion.VERSION_13
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
+
+    implementation("org.webjars:webjars-locator-core")
+    implementation("org.webjars:sockjs-client:1.1.2")
+    implementation("org.webjars:stomp-websocket:2.3.3-1")
+    implementation("org.webjars:bootstrap:4.4.1-1")
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.with {
+        encoding = 'UTF-8'
+    }
+}
