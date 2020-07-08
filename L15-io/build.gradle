@@ -14,10 +14,13 @@ dependencies {
     implementation 'com.google.protobuf:protobuf-java-util'
 }
 
+def filesBaseDir = "${project.projectDir}/src"
+def protoSrcDir = "${project.projectDir}/src/main/proto"
+
 sourceSets {
     main {
         proto {
-            srcDir 'src/main/proto'
+            srcDir protoSrcDir
         }
     }
 }
@@ -26,7 +29,7 @@ protobuf {
     protoc {
         artifact = 'com.google.protobuf:protoc:3.12.1'
     }
-    generatedFilesBaseDir = 'src'
+    generatedFilesBaseDir = filesBaseDir
     generateProtoTasks {
         ofSourceSet('main')
     }

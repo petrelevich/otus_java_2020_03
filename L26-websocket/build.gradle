@@ -10,9 +10,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-websocket")
 
     implementation("org.webjars:webjars-locator-core")
-    implementation("org.webjars:sockjs-client:1.1.2")
-    implementation("org.webjars:stomp-websocket:2.3.3-1")
-    implementation("org.webjars:bootstrap:4.4.1-1")
+    implementation("org.webjars:sockjs-client:${Versions.sockjs}")
+    implementation("org.webjars:stomp-websocket:${Versions.stomp}")
+    implementation("org.webjars:bootstrap:${Versions.bootstrap}")
 }
 
 compileJava.options.encoding = 'UTF-8'

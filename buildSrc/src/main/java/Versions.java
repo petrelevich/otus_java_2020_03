@@ -25,4 +25,7 @@ public interface Versions {
 
     String apacheCommons = "3.9";
 
+    String sockjs = "1.1.2";
+    String stomp = "2.3.3-1";
+    String bootstrap = "4.4.1-1";
 }
