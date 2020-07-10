@@ -10,11 +10,14 @@ public class WeakMapDemo {
     private static final Logger logger = LoggerFactory.getLogger(WeakMapDemo.class);
 
     public static void main(String[] args) throws InterruptedException {
-        //new WeakMapDemo().start();
+        new WeakMapDemo().start();
         //new WeakMapDemo().startStrange();
     }
 
     private void start() throws InterruptedException {
+        String anyString = "key:10";
+
+
         Map<String, Integer> cache = new WeakHashMap<>();
         int limit = 100;
         for (int idx = 0; idx < limit; idx++) {
@@ -33,6 +36,7 @@ public class WeakMapDemo {
         for (Map.Entry<String, Integer> element : cache.entrySet()) {
             logger.info("key:{}, value:{}", element.getKey(), element.getValue());
         }
+        System.out.println(anyString);
     }
 
 
