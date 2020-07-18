@@ -7,4 +7,4 @@ targetCompatibility = JavaVersion.VERSION_13
 
 dependencies {
     implementation("ch.qos.logback:logback-classic")
-cx}
+}
