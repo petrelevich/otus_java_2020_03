@@ -20,7 +20,7 @@ public class PingPong {
                 last = message;
                 sleep();
                 notifyAll();
-                logger.info("after notify");
+                logger.info("after notify, i:{}",i);
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 throw new NotInterestingException(ex);
