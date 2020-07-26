@@ -98,7 +98,7 @@ class IntegrationTest {
         disposeMessageSystem(messageSystemDisposed::countDown);
 
         messageSystemDisposed.await();
-        assertThat(messageSystem.currentQueueSize()).isEqualTo(0);
+        assertThat(messageSystem.currentQueueSize()).isZero();
 
         logger.info("done");
     }
