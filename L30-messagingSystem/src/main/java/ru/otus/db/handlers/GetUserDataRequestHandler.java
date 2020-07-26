@@ -5,7 +5,6 @@ import ru.otus.messagesystem.message.MessageHelper;
 import ru.otus.db.DBService;
 import ru.otus.messagesystem.message.Message;
 import ru.otus.messagesystem.message.MessageBuilder;
-import ru.otus.messagesystem.message.MessageType;
 import ru.otus.messagesystem.RequestHandler;
 
 import java.util.Optional;
@@ -22,6 +21,6 @@ public class GetUserDataRequestHandler implements RequestHandler<UserData> {
     public Optional<Message<UserData>> handle(Message<UserData> msg) {
         UserData userData = MessageHelper.getPayload(msg);
         UserData data = new UserData(userData.getUserId(), dbService.getUserData(userData.getUserId()));
-        return Optional.of(MessageBuilder.buildMessage(msg.getTo(), msg.getFrom(), msg.getId(), data, MessageType.USER_DATA, msg.getCallback()));
+        return Optional.of(MessageBuilder.buildReplyMessage(msg, data));
     }
 }
