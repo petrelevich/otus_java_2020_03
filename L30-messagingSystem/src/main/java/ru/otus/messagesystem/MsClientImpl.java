@@ -3,7 +3,6 @@ package ru.otus.messagesystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.app.common.Serializers;
-
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,15 +14,11 @@ public class MsClientImpl implements MsClient {
     private final MessageSystem messageSystem;
     private final Map<String, RequestHandler> handlers = new ConcurrentHashMap<>();
 
-
-    public MsClientImpl(String name, MessageSystem messageSystem) {
+    public MsClientImpl(String name, MessageSystem messageSystem, Map<MessageType, RequestHandler> requestHandlerMap) {
         this.name = name;
         this.messageSystem = messageSystem;
-    }
-
-    @Override
-    public void addHandler(MessageType type, RequestHandler requestHandler) {
-        this.handlers.put(type.getValue(), requestHandler);
+        requestHandlerMap.forEach(this::addHandler);
+        messageSystem.addClient(this);
     }
 
     @Override
@@ -56,10 +51,9 @@ public class MsClientImpl implements MsClient {
     }
 
     @Override
-    public <T> Message produceMessage(String to, T data, MessageType msgType) {
-        return new Message(name, to, null, msgType.getValue(), Serializers.serialize(data));
+    public <T> Message produceMessage(String to, Object data, MessageType msgType, MessageCallback<T> callback) {
+        return new Message(name, to, null, msgType.getValue(), Serializers.serialize(data), callback);
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -72,5 +66,9 @@ public class MsClientImpl implements MsClient {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    private void addHandler(MessageType type, RequestHandler requestHandler) {
+        handlers.put(type.getValue(), requestHandler);
     }
 }

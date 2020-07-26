@@ -20,6 +20,6 @@ public class GetUserDataRequestHandler implements RequestHandler {
     public Optional<Message> handle(Message msg) {
         long id = Serializers.deserialize(msg.getPayload(), Long.class);
         String data = dbService.getUserData(id);
-        return Optional.of(new Message(msg.getTo(), msg.getFrom(), msg.getId(), MessageType.USER_DATA.getValue(), Serializers.serialize(data)));
+        return Optional.of(new Message(msg.getTo(), msg.getFrom(), msg.getId(), MessageType.USER_DATA.getValue(), Serializers.serialize(data), msg.getCallback()));
     }
 }

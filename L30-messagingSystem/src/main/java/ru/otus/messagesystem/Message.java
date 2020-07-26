@@ -14,6 +14,7 @@ public class Message {
     private final String type;
     private final int payloadLength;
     private final byte[] payload;
+    private final MessageCallback callback;
 
     private Message() {
         this.from = null;
@@ -22,15 +23,17 @@ public class Message {
         this.type = "voidTechnicalMessage";
         this.payload = new byte[1];
         this.payloadLength = payload.length;
+        this.callback = null;
     }
 
-    public Message(String from, String to, UUID sourceMessageId, String type, byte[] payload) {
+    public Message(String from, String to, UUID sourceMessageId, String type, byte[] payload, MessageCallback callback) {
         this.from = from;
         this.to = to;
         this.sourceMessageId = sourceMessageId;
         this.type = type;
         this.payloadLength = payload.length;
         this.payload = payload;
+        this.callback = callback;
     }
 
     @Override
@@ -78,10 +81,9 @@ public class Message {
         return payload;
     }
 
-    public int getPayloadLength() {
-        return payloadLength;
+    public MessageCallback getCallback() {
+        return callback;
     }
-
 
     public Optional<UUID> getSourceMessageId() {
         return Optional.ofNullable(sourceMessageId);

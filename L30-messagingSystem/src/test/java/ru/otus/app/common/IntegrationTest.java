@@ -5,12 +5,15 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.db.DBService;
+import ru.otus.db.DBServiceImpl;
 import ru.otus.db.handlers.GetUserDataRequestHandler;
 import ru.otus.front.FrontendService;
 import ru.otus.front.FrontendServiceImpl;
 import ru.otus.front.handlers.GetUserDataResponseHandler;
 import ru.otus.messagesystem.*;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.IntStream;
 
@@ -21,7 +24,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class IntegrationTest {
+class IntegrationTest {
     private static final Logger logger = LoggerFactory.getLogger(IntegrationTest.class);
 
     private static final String FRONTEND_SERVICE_CLIENT_NAME = "frontendService";
@@ -34,7 +37,7 @@ public class IntegrationTest {
 
     @DisplayName("Базовый сценарий получения данных")
     @RepeatedTest(1000)
-    public void getDataById() throws Exception {
+    void getDataById() throws Exception {
         createMessageSystem(true);
         int counter = 3;
         CountDownLatch waitLatch = new CountDownLatch(counter);
@@ -52,7 +55,7 @@ public class IntegrationTest {
 
     @DisplayName("Выполнение запроса после остановки сервиса")
     @RepeatedTest(2)
-    public void getDataAfterShutdown() throws Exception {
+    void getDataAfterShutdown() throws Exception {
         createMessageSystem(true);
         messageSystem.dispose();
 
@@ -74,7 +77,7 @@ public class IntegrationTest {
 
     @DisplayName("Тестируем остановку работы MessageSystem")
     @RepeatedTest(1000)
-    public void stopMessageSystem() throws Exception {
+    void stopMessageSystem() throws Exception {
         createMessageSystem(false);
         int counter = 100;
         CountDownLatch messagesSentLatch = new CountDownLatch(counter);
@@ -103,16 +106,20 @@ public class IntegrationTest {
         logger.info("setup");
         messageSystem = new MessageSystemImpl(startProcessing);
 
-        databaseMsClient = spy(new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem));
         DBService dbService = mock(DBService.class);
         when(dbService.getUserData(any(Long.class))).thenAnswer(invocation -> String.valueOf((Long) invocation.getArgument(0)));
-        databaseMsClient.addHandler(MessageType.USER_DATA, new GetUserDataRequestHandler(dbService));
-        messageSystem.addClient(databaseMsClient);
 
-        frontendMsClient = spy(new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem));
+        Map<MessageType, RequestHandler> requestHandlerDatabase = new EnumMap<>(MessageType.class);
+        requestHandlerDatabase.put(MessageType.USER_DATA, new GetUserDataRequestHandler(dbService));
+        databaseMsClient = spy(new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem, requestHandlerDatabase));
+
+
+        //////////////////////////
+        Map<MessageType, RequestHandler> requestHandlerFrontend = new EnumMap<>(MessageType.class);
+        requestHandlerFrontend.put(MessageType.USER_DATA, new GetUserDataResponseHandler());
+
+        frontendMsClient = spy(new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem, requestHandlerFrontend));
         frontendService = new FrontendServiceImpl(frontendMsClient, DATABASE_SERVICE_CLIENT_NAME);
-        frontendMsClient.addHandler(MessageType.USER_DATA, new GetUserDataResponseHandler(frontendService));
-        messageSystem.addClient(frontendMsClient);
 
         logger.info("setup done");
     }
