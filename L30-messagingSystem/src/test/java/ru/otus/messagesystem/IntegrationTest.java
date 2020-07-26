@@ -11,12 +11,9 @@ import ru.otus.front.FrontendServiceImpl;
 import ru.otus.front.handlers.GetUserDataResponseHandler;
 import ru.otus.messagesystem.client.MsClient;
 import ru.otus.messagesystem.client.MsClientImpl;
-import ru.otus.messagesystem.client.ResultDataType;
 import ru.otus.messagesystem.message.Message;
 import ru.otus.messagesystem.message.MessageType;
 
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.IntStream;
 
@@ -35,7 +32,6 @@ class IntegrationTest {
 
     private MessageSystem messageSystem;
     private FrontendService frontendService;
-    private MsClient databaseMsClient;
     private MsClient frontendMsClient;
 
     @DisplayName("Базовый сценарий получения данных")
@@ -112,16 +108,16 @@ class IntegrationTest {
         DBService dbService = mock(DBService.class);
         when(dbService.getUserData(any(Long.class))).thenAnswer(invocation -> String.valueOf((Long) invocation.getArgument(0)));
 
-        Map<MessageType, RequestHandler<? extends ResultDataType>> requestHandlerDatabase = new EnumMap<>(MessageType.class);
-        requestHandlerDatabase.put(MessageType.USER_DATA, new GetUserDataRequestHandler(dbService));
-        databaseMsClient = spy(new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem, requestHandlerDatabase));
+        HandlersStore requestHandlerDatabaseStore = new HandlersStore();
+        requestHandlerDatabaseStore.addHandler(MessageType.USER_DATA, new GetUserDataRequestHandler(dbService));
+        MsClient databaseMsClient = spy(new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem, requestHandlerDatabaseStore));
 
 
         //////////////////////////
-        Map<MessageType, RequestHandler<? extends ResultDataType>> requestHandlerFrontend = new EnumMap<>(MessageType.class);
-        requestHandlerFrontend.put(MessageType.USER_DATA, new GetUserDataResponseHandler());
+        HandlersStore requestHandlerFrontendStore = new HandlersStore();
+        requestHandlerFrontendStore.addHandler(MessageType.USER_DATA, new GetUserDataResponseHandler());
 
-        frontendMsClient = spy(new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem, requestHandlerFrontend));
+        frontendMsClient = spy(new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem, requestHandlerFrontendStore));
         frontendService = new FrontendServiceImpl(frontendMsClient, DATABASE_SERVICE_CLIENT_NAME);
 
         logger.info("setup done");

@@ -2,6 +2,7 @@ package ru.otus.messagesystem.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.messagesystem.HandlersStore;
 import ru.otus.messagesystem.message.Message;
 import ru.otus.messagesystem.message.MessageBuilder;
 import ru.otus.messagesystem.MessageSystem;
@@ -10,6 +11,7 @@ import ru.otus.messagesystem.RequestHandler;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MsClientImpl implements MsClient {
@@ -17,12 +19,12 @@ public class MsClientImpl implements MsClient {
 
     private final String name;
     private final MessageSystem messageSystem;
-    private final Map<String, RequestHandler<? extends ResultDataType>> handlers = new ConcurrentHashMap<>();
+    private final HandlersStore handlersStore;
 
-    public MsClientImpl(String name, MessageSystem messageSystem, Map<MessageType, RequestHandler<? extends ResultDataType>> requestHandlerMap) {
+    public MsClientImpl(String name, MessageSystem messageSystem, HandlersStore handlersStore) {
         this.name = name;
         this.messageSystem = messageSystem;
-        requestHandlerMap.forEach(this::addHandler);
+        this.handlersStore = handlersStore;
     }
 
     @Override
@@ -39,11 +41,12 @@ public class MsClientImpl implements MsClient {
         return result;
     }
 
+    @SuppressWarnings("all")
     @Override
     public void handle(Message<? extends ResultDataType> msg) {
         logger.info("new message:{}", msg);
         try {
-            RequestHandler requestHandler = handlers.get(msg.getType());
+            RequestHandler requestHandler = handlersStore.getHandlerByType(msg.getType());
             if (requestHandler != null) {
                 requestHandler.handle(msg).ifPresent(message -> sendMessage((Message<? extends ResultDataType>) message));
             } else {
@@ -70,9 +73,5 @@ public class MsClientImpl implements MsClient {
     @Override
     public int hashCode() {
         return Objects.hash(name);
-    }
-
-    private void addHandler(MessageType type, RequestHandler<? extends ResultDataType> requestHandler) {
-        handlers.put(type.getName(), requestHandler);
     }
 }
