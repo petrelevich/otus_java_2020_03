@@ -9,10 +9,7 @@ import ru.otus.messagesystem.MessageSystem;
 import ru.otus.messagesystem.message.MessageType;
 import ru.otus.messagesystem.RequestHandler;
 
-import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class MsClientImpl implements MsClient {
     private static final Logger logger = LoggerFactory.getLogger(MsClientImpl.class);

@@ -11,13 +11,9 @@ import ru.otus.front.handlers.GetUserDataResponseHandler;
 import ru.otus.messagesystem.HandlersStore;
 import ru.otus.messagesystem.MessageSystem;
 import ru.otus.messagesystem.MessageSystemImpl;
-import ru.otus.messagesystem.client.ResultDataType;
+import ru.otus.messagesystem.client.MsClient;
 import ru.otus.messagesystem.message.MessageType;
 import ru.otus.messagesystem.client.MsClientImpl;
-import ru.otus.messagesystem.RequestHandler;
-
-import java.util.EnumMap;
-import java.util.Map;
 
 public class MSMain {
     private static final Logger logger = LoggerFactory.getLogger(MSMain.class);
@@ -30,12 +26,13 @@ public class MSMain {
 
         HandlersStore requestHandlerDatabaseStore = new HandlersStore();
         requestHandlerDatabaseStore.addHandler(MessageType.USER_DATA, new GetUserDataRequestHandler(new DBServiceImpl()));
-        new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem, requestHandlerDatabaseStore);
+        MsClient databaseMsClient = new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem, requestHandlerDatabaseStore);
+        messageSystem.addClient(databaseMsClient);
 
         HandlersStore requestHandlerFrontendStore = new HandlersStore();
         requestHandlerFrontendStore.addHandler(MessageType.USER_DATA, new GetUserDataResponseHandler());
 
-        MsClientImpl frontendMsClient = new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem, requestHandlerFrontendStore);
+        MsClient frontendMsClient = new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem, requestHandlerFrontendStore);
         FrontendService frontendService = new FrontendServiceImpl(frontendMsClient, DATABASE_SERVICE_CLIENT_NAME);
         messageSystem.addClient(frontendMsClient);
 

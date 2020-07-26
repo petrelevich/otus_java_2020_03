@@ -111,7 +111,7 @@ class IntegrationTest {
         HandlersStore requestHandlerDatabaseStore = new HandlersStore();
         requestHandlerDatabaseStore.addHandler(MessageType.USER_DATA, new GetUserDataRequestHandler(dbService));
         MsClient databaseMsClient = spy(new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem, requestHandlerDatabaseStore));
-
+        messageSystem.addClient(databaseMsClient);
 
         //////////////////////////
         HandlersStore requestHandlerFrontendStore = new HandlersStore();
@@ -119,6 +119,7 @@ class IntegrationTest {
 
         frontendMsClient = spy(new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem, requestHandlerFrontendStore));
         frontendService = new FrontendServiceImpl(frontendMsClient, DATABASE_SERVICE_CLIENT_NAME);
+        messageSystem.addClient(frontendMsClient);
 
         logger.info("setup done");
     }
