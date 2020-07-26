@@ -9,6 +9,8 @@ import ru.otus.db.handlers.GetUserDataRequestHandler;
 import ru.otus.front.FrontendService;
 import ru.otus.front.FrontendServiceImpl;
 import ru.otus.front.handlers.GetUserDataResponseHandler;
+import ru.otus.messagesystem.client.CallbackRegistry;
+import ru.otus.messagesystem.client.CallbackRegistryImpl;
 import ru.otus.messagesystem.client.MsClient;
 import ru.otus.messagesystem.client.MsClientImpl;
 import ru.otus.messagesystem.message.Message;
@@ -16,6 +18,7 @@ import ru.otus.messagesystem.message.MessageType;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,9 +44,9 @@ class IntegrationTest {
         int counter = 3;
         CountDownLatch waitLatch = new CountDownLatch(counter);
 
-        IntStream.range(0, counter).forEach(id ->
+        LongStream.range(0, counter).forEach(id ->
                 frontendService.getUserData(id, data -> {
-                    assertThat(data).isEqualTo(String.valueOf(id));
+                    assertThat(data.getUserId()).isEqualTo(id);
                     waitLatch.countDown();
                 }));
 
@@ -104,20 +107,23 @@ class IntegrationTest {
     private void createMessageSystem(boolean startProcessing) {
         logger.info("setup");
         messageSystem = new MessageSystemImpl(startProcessing);
+        CallbackRegistry callbackRegistry = new CallbackRegistryImpl();
 
         DBService dbService = mock(DBService.class);
         when(dbService.getUserData(any(Long.class))).thenAnswer(invocation -> String.valueOf((Long) invocation.getArgument(0)));
 
         HandlersStore requestHandlerDatabaseStore = new HandlersStore();
         requestHandlerDatabaseStore.addHandler(MessageType.USER_DATA, new GetUserDataRequestHandler(dbService));
-        MsClient databaseMsClient = spy(new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem, requestHandlerDatabaseStore));
+        MsClient databaseMsClient = spy(new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem,
+                requestHandlerDatabaseStore, callbackRegistry));
         messageSystem.addClient(databaseMsClient);
 
         //////////////////////////
         HandlersStore requestHandlerFrontendStore = new HandlersStore();
-        requestHandlerFrontendStore.addHandler(MessageType.USER_DATA, new GetUserDataResponseHandler());
+        requestHandlerFrontendStore.addHandler(MessageType.USER_DATA, new GetUserDataResponseHandler(callbackRegistry));
 
-        frontendMsClient = spy(new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem, requestHandlerFrontendStore));
+        frontendMsClient = spy(new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem,
+                requestHandlerFrontendStore, callbackRegistry));
         frontendService = new FrontendServiceImpl(frontendMsClient, DATABASE_SERVICE_CLIENT_NAME);
         messageSystem.addClient(frontendMsClient);
 

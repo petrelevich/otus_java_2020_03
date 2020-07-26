@@ -11,6 +11,8 @@ import ru.otus.front.handlers.GetUserDataResponseHandler;
 import ru.otus.messagesystem.HandlersStore;
 import ru.otus.messagesystem.MessageSystem;
 import ru.otus.messagesystem.MessageSystemImpl;
+import ru.otus.messagesystem.client.CallbackRegistry;
+import ru.otus.messagesystem.client.CallbackRegistryImpl;
 import ru.otus.messagesystem.client.MsClient;
 import ru.otus.messagesystem.message.MessageType;
 import ru.otus.messagesystem.client.MsClientImpl;
@@ -23,16 +25,19 @@ public class MSMain {
 
     public static void main(String[] args) throws InterruptedException {
         MessageSystem messageSystem = new MessageSystemImpl();
+        CallbackRegistry callbackRegistry = new CallbackRegistryImpl();
 
         HandlersStore requestHandlerDatabaseStore = new HandlersStore();
         requestHandlerDatabaseStore.addHandler(MessageType.USER_DATA, new GetUserDataRequestHandler(new DBServiceImpl()));
-        MsClient databaseMsClient = new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem, requestHandlerDatabaseStore);
+        MsClient databaseMsClient = new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME,
+                messageSystem, requestHandlerDatabaseStore, callbackRegistry);
         messageSystem.addClient(databaseMsClient);
 
         HandlersStore requestHandlerFrontendStore = new HandlersStore();
-        requestHandlerFrontendStore.addHandler(MessageType.USER_DATA, new GetUserDataResponseHandler());
+        requestHandlerFrontendStore.addHandler(MessageType.USER_DATA, new GetUserDataResponseHandler(callbackRegistry));
 
-        MsClient frontendMsClient = new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem, requestHandlerFrontendStore);
+        MsClient frontendMsClient = new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME,
+                messageSystem, requestHandlerFrontendStore, callbackRegistry);
         FrontendService frontendService = new FrontendServiceImpl(frontendMsClient, DATABASE_SERVICE_CLIENT_NAME);
         messageSystem.addClient(frontendMsClient);
 

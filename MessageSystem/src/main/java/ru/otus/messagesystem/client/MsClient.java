@@ -5,11 +5,11 @@ import ru.otus.messagesystem.message.MessageType;
 
 public interface MsClient {
 
-    boolean sendMessage(Message<? extends ResultDataType> msg);
+    boolean sendMessage(Message msg);
 
-    void handle(Message<? extends ResultDataType> msg);
+    void handle(Message msg);
 
     String getName();
 
-    <T extends ResultDataType> Message<T> produceMessage(String to, T data, MessageType msgType, MessageCallback<T> callback);
+    <T extends ResultDataType> Message produceMessage(String to, T data, MessageType msgType, MessageCallback<T> callback);
 }

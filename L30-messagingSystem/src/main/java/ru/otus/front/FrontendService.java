@@ -1,8 +1,9 @@
 package ru.otus.front;
 
-import java.util.function.Consumer;
+import ru.otus.UserData;
+import ru.otus.messagesystem.client.MessageCallback;
 
 public interface FrontendService {
-    void getUserData(long userId, Consumer<String> dataConsumer);
+    void getUserData(long userId, MessageCallback<UserData> dataConsumer);
 }
 

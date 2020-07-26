@@ -17,11 +17,14 @@ public class MsClientImpl implements MsClient {
     private final String name;
     private final MessageSystem messageSystem;
     private final HandlersStore handlersStore;
+    private final CallbackRegistry callbackRegistry;
 
-    public MsClientImpl(String name, MessageSystem messageSystem, HandlersStore handlersStore) {
+    public MsClientImpl(String name, MessageSystem messageSystem, HandlersStore handlersStore,
+                        CallbackRegistry callbackRegistry) {
         this.name = name;
         this.messageSystem = messageSystem;
         this.handlersStore = handlersStore;
+        this.callbackRegistry = callbackRegistry;
     }
 
     @Override
@@ -30,7 +33,7 @@ public class MsClientImpl implements MsClient {
     }
 
     @Override
-    public boolean sendMessage(Message<? extends ResultDataType> msg) {
+    public boolean sendMessage(Message msg) {
         boolean result = messageSystem.newMessage(msg);
         if (!result) {
             logger.error("the last message was rejected: {}", msg);
@@ -40,12 +43,12 @@ public class MsClientImpl implements MsClient {
 
     @SuppressWarnings("all")
     @Override
-    public void handle(Message<? extends ResultDataType> msg) {
+    public void handle(Message msg) {
         logger.info("new message:{}", msg);
         try {
             RequestHandler requestHandler = handlersStore.getHandlerByType(msg.getType());
             if (requestHandler != null) {
-                requestHandler.handle(msg).ifPresent(message -> sendMessage((Message<? extends ResultDataType>) message));
+                requestHandler.handle(msg).ifPresent(message -> sendMessage((Message) message));
             } else {
                 logger.error("handler not found for the message type:{}", msg.getType());
             }
@@ -55,8 +58,11 @@ public class MsClientImpl implements MsClient {
     }
 
     @Override
-    public <T extends ResultDataType> Message<T> produceMessage(String to, T data, MessageType msgType, MessageCallback<T> callback) {
-        return MessageBuilder.buildMessage(name, to, null, data, msgType, callback);
+    public <T extends ResultDataType> Message produceMessage(String to, T data, MessageType msgType,
+                                                                MessageCallback<T> callback) {
+        Message message = MessageBuilder.buildMessage(name, to, null, data, msgType);
+        callbackRegistry.put(message.getCallbackId(), callback);
+        return message;
     }
 
     @Override

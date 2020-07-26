@@ -1,13 +1,13 @@
-package ru.otus.messagesystem.message;
+package ru.otus.messagesystem.client;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class MessageId implements Serializable {
+public class CallbackId implements Serializable {
     private static final long serialVersionUID = 1L;
     private final long id;
 
-    public MessageId(long id) {
+    public CallbackId(long id) {
         this.id = id;
     }
 
@@ -17,7 +17,7 @@ public class MessageId implements Serializable {
 
     @Override
     public String toString() {
-        return "MessageId{" +
+        return "CallbackId{" +
                 "id=" + id +
                 '}';
     }
@@ -26,8 +26,8 @@ public class MessageId implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MessageId messageId = (MessageId) o;
-        return id == messageId.id;
+        CallbackId that = (CallbackId) o;
+        return id == that.id;
     }
 
     @Override

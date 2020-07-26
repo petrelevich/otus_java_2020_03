@@ -23,4 +23,12 @@ public class UserData extends ResultDataType {
     public String getData() {
         return data;
     }
+
+    @Override
+    public String toString() {
+        return "UserData{" +
+                "userId=" + userId +
+                ", data='" + data + '\'' +
+                '}';
+    }
 }
