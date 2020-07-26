@@ -1,15 +1,17 @@
 package ru.otus.db.handlers;
 
-import ru.otus.app.common.Serializers;
+import ru.otus.UserData;
+import ru.otus.messagesystem.message.MessageHelper;
 import ru.otus.db.DBService;
-import ru.otus.messagesystem.Message;
-import ru.otus.messagesystem.MessageType;
+import ru.otus.messagesystem.message.Message;
+import ru.otus.messagesystem.message.MessageBuilder;
+import ru.otus.messagesystem.message.MessageType;
 import ru.otus.messagesystem.RequestHandler;
 
 import java.util.Optional;
 
 
-public class GetUserDataRequestHandler implements RequestHandler {
+public class GetUserDataRequestHandler implements RequestHandler<UserData> {
     private final DBService dbService;
 
     public GetUserDataRequestHandler(DBService dbService) {
@@ -17,9 +19,9 @@ public class GetUserDataRequestHandler implements RequestHandler {
     }
 
     @Override
-    public Optional<Message> handle(Message msg) {
-        long id = Serializers.deserialize(msg.getPayload(), Long.class);
-        String data = dbService.getUserData(id);
-        return Optional.of(new Message(msg.getTo(), msg.getFrom(), msg.getId(), MessageType.USER_DATA.getValue(), Serializers.serialize(data), msg.getCallback()));
+    public Optional<Message<UserData>> handle(Message<UserData> msg) {
+        UserData userData = MessageHelper.getPayload(msg);
+        UserData data = new UserData(userData.getUserId(), dbService.getUserData(userData.getUserId()));
+        return Optional.of(MessageBuilder.buildMessage(msg.getTo(), msg.getFrom(), msg.getId(), data, MessageType.USER_DATA, msg.getCallback()));
     }
 }

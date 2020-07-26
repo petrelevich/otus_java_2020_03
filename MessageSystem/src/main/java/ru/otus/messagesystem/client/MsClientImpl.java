@@ -1,10 +1,16 @@
-package ru.otus.messagesystem;
+package ru.otus.messagesystem.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.app.common.Serializers;
+import ru.otus.messagesystem.message.Message;
+import ru.otus.messagesystem.message.MessageBuilder;
+import ru.otus.messagesystem.MessageSystem;
+import ru.otus.messagesystem.message.MessageType;
+import ru.otus.messagesystem.RequestHandler;
+
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MsClientImpl implements MsClient {
@@ -12,9 +18,9 @@ public class MsClientImpl implements MsClient {
 
     private final String name;
     private final MessageSystem messageSystem;
-    private final Map<String, RequestHandler> handlers = new ConcurrentHashMap<>();
+    private final Map<String, RequestHandler<? extends ResultDataType>> handlers = new ConcurrentHashMap<>();
 
-    public MsClientImpl(String name, MessageSystem messageSystem, Map<MessageType, RequestHandler> requestHandlerMap) {
+    public MsClientImpl(String name, MessageSystem messageSystem, Map<MessageType, RequestHandler<? extends ResultDataType>> requestHandlerMap) {
         this.name = name;
         this.messageSystem = messageSystem;
         requestHandlerMap.forEach(this::addHandler);
@@ -27,7 +33,7 @@ public class MsClientImpl implements MsClient {
     }
 
     @Override
-    public boolean sendMessage(Message msg) {
+    public boolean sendMessage(Message<? extends ResultDataType> msg) {
         boolean result = messageSystem.newMessage(msg);
         if (!result) {
             logger.error("the last message was rejected: {}", msg);
@@ -36,12 +42,12 @@ public class MsClientImpl implements MsClient {
     }
 
     @Override
-    public void handle(Message msg) {
+    public void handle(Message<? extends ResultDataType> msg) {
         logger.info("new message:{}", msg);
         try {
             RequestHandler requestHandler = handlers.get(msg.getType());
             if (requestHandler != null) {
-                requestHandler.handle(msg).ifPresent(this::sendMessage);
+                requestHandler.handle(msg).ifPresent(message -> sendMessage((Message<? extends ResultDataType>) message));
             } else {
                 logger.error("handler not found for the message type:{}", msg.getType());
             }
@@ -51,8 +57,8 @@ public class MsClientImpl implements MsClient {
     }
 
     @Override
-    public <T> Message produceMessage(String to, Object data, MessageType msgType, MessageCallback<T> callback) {
-        return new Message(name, to, null, msgType.getValue(), Serializers.serialize(data), callback);
+    public <T extends ResultDataType> Message<T> produceMessage(String to, T data, MessageType msgType, MessageCallback<T> callback) {
+        return MessageBuilder.buildMessage(name, to, null, data, msgType, callback);
     }
 
     @Override
@@ -68,7 +74,7 @@ public class MsClientImpl implements MsClient {
         return Objects.hash(name);
     }
 
-    private void addHandler(MessageType type, RequestHandler requestHandler) {
-        handlers.put(type.getValue(), requestHandler);
+    private void addHandler(MessageType type, RequestHandler<? extends ResultDataType> requestHandler) {
+        handlers.put(type.getName(), requestHandler);
     }
 }

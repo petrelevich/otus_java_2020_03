@@ -1,11 +1,12 @@
 package ru.otus.front;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.otus.messagesystem.Message;
-import ru.otus.messagesystem.MessageType;
-import ru.otus.messagesystem.MsClient;
+import ru.otus.UserData;
+import ru.otus.messagesystem.client.MessageCallback;
+import ru.otus.messagesystem.message.Message;
+import ru.otus.messagesystem.message.MessageType;
+import ru.otus.messagesystem.client.MsClient;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 
 public class FrontendServiceImpl implements FrontendService {
@@ -20,7 +21,12 @@ public class FrontendServiceImpl implements FrontendService {
 
     @Override
     public void getUserData(long userId, Consumer<String> dataConsumer) {
-        Message outMsg = msClient.produceMessage(databaseServiceClientName, userId, MessageType.USER_DATA, dataConsumer::accept);
+        Message<UserData> outMsg = msClient.produceMessage(databaseServiceClientName, new UserData(userId), MessageType.USER_DATA,
+                getMessageCallback(dataConsumer));
         msClient.sendMessage(outMsg);
+    }
+
+    private MessageCallback<UserData> getMessageCallback(Consumer<String> dataConsumer) {
+        return userData -> dataConsumer.accept(userData.getData());
     }
 }

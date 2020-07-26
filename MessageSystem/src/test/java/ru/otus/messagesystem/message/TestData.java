@@ -1,4 +1,4 @@
-package ru.otus.app.common;
+package ru.otus.messagesystem.message;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -18,7 +18,7 @@ class TestData implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ru.otus.app.common.TestData testData = (ru.otus.app.common.TestData) o;
+        TestData testData = (TestData) o;
         return x == testData.x &&
                 y == testData.y &&
                 Objects.equals(str, testData.str);

@@ -1,38 +1,31 @@
-package ru.otus.messagesystem;
+package ru.otus.messagesystem.message;
 
+import ru.otus.messagesystem.client.MessageCallback;
+import ru.otus.messagesystem.client.ResultDataType;
+
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
-public class Message {
-    static final Message VOID_MESSAGE = new Message();
+public class Message<T extends ResultDataType> {
 
-    private final UUID id = UUID.randomUUID();
+    private final MessageId id;
     private final String from;
     private final String to;
-    private final UUID sourceMessageId;
+    private final MessageId sourceMessageId;
     private final String type;
-    private final int payloadLength;
     private final byte[] payload;
-    private final MessageCallback callback;
+    private final Class<?> payloadClass;
+    private final MessageCallback<T> callback;
 
-    private Message() {
-        this.from = null;
-        this.to = null;
-        this.sourceMessageId = null;
-        this.type = "voidTechnicalMessage";
-        this.payload = new byte[1];
-        this.payloadLength = payload.length;
-        this.callback = null;
-    }
-
-    public Message(String from, String to, UUID sourceMessageId, String type, byte[] payload, MessageCallback callback) {
+    Message(MessageId messageId, String from, String to, MessageId sourceMessageId, String type, byte[] payload, Class<?> payloadClass, MessageCallback<T> callback) {
+        this.id = messageId;
         this.from = from;
         this.to = to;
         this.sourceMessageId = sourceMessageId;
         this.type = type;
-        this.payloadLength = payload.length;
         this.payload = payload;
+        this.payloadClass = payloadClass;
         this.callback = callback;
     }
 
@@ -40,8 +33,8 @@ public class Message {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Message message = (Message) o;
-        return id == message.id;
+        Message<?> message = (Message<?>) o;
+        return Objects.equals(id, message.id);
     }
 
     @Override
@@ -57,11 +50,12 @@ public class Message {
                 ", to='" + to + '\'' +
                 ", sourceMessageId=" + sourceMessageId +
                 ", type='" + type + '\'' +
-                ", payloadLength=" + payloadLength +
+                ", payload=" + Arrays.toString(payload) +
+                ", callback=" + callback +
                 '}';
     }
 
-    public UUID getId() {
+    public MessageId getId() {
         return id;
     }
 
@@ -81,11 +75,15 @@ public class Message {
         return payload;
     }
 
-    public MessageCallback getCallback() {
+    public Class<?> getPayloadClass() {
+        return payloadClass;
+    }
+
+    public MessageCallback<T> getCallback() {
         return callback;
     }
 
-    public Optional<UUID> getSourceMessageId() {
+    public Optional<MessageId> getSourceMessageId() {
         return Optional.ofNullable(sourceMessageId);
     }
 }

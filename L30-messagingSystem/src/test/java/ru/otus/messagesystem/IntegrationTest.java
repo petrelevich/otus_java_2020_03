@@ -1,16 +1,19 @@
-package ru.otus.app.common;
+package ru.otus.messagesystem;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.db.DBService;
-import ru.otus.db.DBServiceImpl;
 import ru.otus.db.handlers.GetUserDataRequestHandler;
 import ru.otus.front.FrontendService;
 import ru.otus.front.FrontendServiceImpl;
 import ru.otus.front.handlers.GetUserDataResponseHandler;
-import ru.otus.messagesystem.*;
+import ru.otus.messagesystem.client.MsClient;
+import ru.otus.messagesystem.client.MsClientImpl;
+import ru.otus.messagesystem.client.ResultDataType;
+import ru.otus.messagesystem.message.Message;
+import ru.otus.messagesystem.message.MessageType;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -109,13 +112,13 @@ class IntegrationTest {
         DBService dbService = mock(DBService.class);
         when(dbService.getUserData(any(Long.class))).thenAnswer(invocation -> String.valueOf((Long) invocation.getArgument(0)));
 
-        Map<MessageType, RequestHandler> requestHandlerDatabase = new EnumMap<>(MessageType.class);
+        Map<MessageType, RequestHandler<? extends ResultDataType>> requestHandlerDatabase = new EnumMap<>(MessageType.class);
         requestHandlerDatabase.put(MessageType.USER_DATA, new GetUserDataRequestHandler(dbService));
         databaseMsClient = spy(new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem, requestHandlerDatabase));
 
 
         //////////////////////////
-        Map<MessageType, RequestHandler> requestHandlerFrontend = new EnumMap<>(MessageType.class);
+        Map<MessageType, RequestHandler<? extends ResultDataType>> requestHandlerFrontend = new EnumMap<>(MessageType.class);
         requestHandlerFrontend.put(MessageType.USER_DATA, new GetUserDataResponseHandler());
 
         frontendMsClient = spy(new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem, requestHandlerFrontend));
