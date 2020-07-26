@@ -10,7 +10,6 @@ import ru.otus.messagesystem.RequestHandler;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MsClientImpl implements MsClient {
@@ -24,7 +23,6 @@ public class MsClientImpl implements MsClient {
         this.name = name;
         this.messageSystem = messageSystem;
         requestHandlerMap.forEach(this::addHandler);
-        messageSystem.addClient(this);
     }
 
     @Override
