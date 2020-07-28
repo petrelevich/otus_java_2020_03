@@ -6,16 +6,8 @@ import ru.otus.messagesystem.message.MessageType;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class HandlersStore {
-    private final Map<String, RequestHandler<? extends ResultDataType>> handlers = new ConcurrentHashMap<>();
+public interface HandlersStore {
+    RequestHandler<? extends ResultDataType> getHandlerByType(String messageTypeName);
 
-    public RequestHandler<? extends ResultDataType> getHandlerByType(String messageTypeName) {
-        return handlers.get(messageTypeName);
-    }
-
-    public void addHandler(MessageType messageType, RequestHandler<? extends ResultDataType> handler) {
-        handlers.put(messageType.getName(), handler);
-    }
-
-
+    void addHandler(MessageType messageType, RequestHandler<? extends ResultDataType> handler);
 }

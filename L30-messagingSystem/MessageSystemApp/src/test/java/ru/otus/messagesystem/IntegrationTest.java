@@ -112,14 +112,14 @@ class IntegrationTest {
         DBService dbService = mock(DBService.class);
         when(dbService.getUserData(any(Long.class))).thenAnswer(invocation -> String.valueOf((Long) invocation.getArgument(0)));
 
-        HandlersStore requestHandlerDatabaseStore = new HandlersStore();
+        HandlersStore requestHandlerDatabaseStore = new HandlersStoreImpl();
         requestHandlerDatabaseStore.addHandler(MessageType.USER_DATA, new GetUserDataRequestHandler(dbService));
         MsClient databaseMsClient = spy(new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem,
                 requestHandlerDatabaseStore, callbackRegistry));
         messageSystem.addClient(databaseMsClient);
 
         //////////////////////////
-        HandlersStore requestHandlerFrontendStore = new HandlersStore();
+        HandlersStore requestHandlerFrontendStore = new HandlersStoreImpl();
         requestHandlerFrontendStore.addHandler(MessageType.USER_DATA, new GetUserDataResponseHandler(callbackRegistry));
 
         frontendMsClient = spy(new MsClientImpl(FRONTEND_SERVICE_CLIENT_NAME, messageSystem,
