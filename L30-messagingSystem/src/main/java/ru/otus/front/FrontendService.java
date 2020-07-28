@@ -1,6 +1,6 @@
 package ru.otus.front;
 
-import ru.otus.UserData;
+import ru.otus.dto.UserData;
 import ru.otus.messagesystem.client.MessageCallback;
 
 public interface FrontendService {

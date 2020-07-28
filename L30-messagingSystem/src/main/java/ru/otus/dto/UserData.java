@@ -1,4 +1,4 @@
-package ru.otus;
+package ru.otus.dto;
 
 import ru.otus.messagesystem.client.ResultDataType;
 

@@ -2,7 +2,7 @@ package ru.otus.front.handlers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.UserData;
+import ru.otus.dto.UserData;
 import ru.otus.messagesystem.client.CallbackRegistry;
 import ru.otus.messagesystem.client.MessageCallback;
 import ru.otus.messagesystem.client.ResultDataType;

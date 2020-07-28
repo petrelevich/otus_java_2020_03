@@ -1,6 +1,6 @@
 package ru.otus.front;
 
-import ru.otus.UserData;
+import ru.otus.dto.UserData;
 import ru.otus.messagesystem.client.MessageCallback;
 import ru.otus.messagesystem.message.Message;
 import ru.otus.messagesystem.message.MessageType;

@@ -1,6 +1,6 @@
 package ru.otus.db.handlers;
 
-import ru.otus.UserData;
+import ru.otus.dto.UserData;
 import ru.otus.messagesystem.message.MessageHelper;
 import ru.otus.db.DBService;
 import ru.otus.messagesystem.message.Message;
