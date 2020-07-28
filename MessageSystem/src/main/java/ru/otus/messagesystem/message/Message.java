@@ -3,6 +3,7 @@ package ru.otus.messagesystem.message;
 import ru.otus.messagesystem.client.CallbackId;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -33,12 +34,20 @@ public class Message implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Message message = (Message) o;
-        return Objects.equals(id, message.id);
+        return Objects.equals(id, message.id) &&
+                Objects.equals(from, message.from) &&
+                Objects.equals(to, message.to) &&
+                Objects.equals(sourceMessageId, message.sourceMessageId) &&
+                Objects.equals(type, message.type) &&
+                Arrays.equals(payload, message.payload) &&
+                Objects.equals(callbackId, message.callbackId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        int result = Objects.hash(id, from, to, sourceMessageId, type, callbackId);
+        result = 31 * result + Arrays.hashCode(payload);
+        return result;
     }
 
     @Override

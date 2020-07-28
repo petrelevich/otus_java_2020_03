@@ -5,13 +5,13 @@ import java.util.Objects;
 
 public class CallbackId implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final long id;
+    private final String id;
 
-    public CallbackId(long id) {
+    public CallbackId(String id) {
         this.id = id;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -27,7 +27,7 @@ public class CallbackId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CallbackId that = (CallbackId) o;
-        return id == that.id;
+        return Objects.equals(id, that.id);
     }
 
     @Override

@@ -2,6 +2,7 @@ package ru.otus.messagesystem.message;
 
 import org.junit.jupiter.api.Test;
 import ru.otus.messagesystem.client.CallbackId;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,8 +10,9 @@ class MessageHelperTest {
 
     @Test
     void serializeDeSerializeMessage() {
-        Message msgExpected = new Message(new MessageId(1), "from", "to", new MessageId(2), "type",
-                new byte[12], new CallbackId(3));
+        Message msgExpected = new Message(new MessageId(UUID.randomUUID().toString()), "from", "to",
+                new MessageId(UUID.randomUUID().toString()), "type",
+                new byte[12], new CallbackId(UUID.randomUUID().toString()));
 
         byte[] data = MessageHelper.serializeMessage(msgExpected);
 

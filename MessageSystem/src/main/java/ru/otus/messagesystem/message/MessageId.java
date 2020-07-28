@@ -5,13 +5,13 @@ import java.util.Objects;
 
 public class MessageId implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final long id;
+    private final String id;
 
-    public MessageId(long id) {
+    public MessageId(String id) {
         this.id = id;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -27,7 +27,7 @@ public class MessageId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MessageId messageId = (MessageId) o;
-        return id == messageId.id;
+        return Objects.equals(id, messageId.id);
     }
 
     @Override
