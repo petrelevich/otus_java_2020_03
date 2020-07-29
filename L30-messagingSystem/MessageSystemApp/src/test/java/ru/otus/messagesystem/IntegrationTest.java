@@ -86,8 +86,7 @@ class IntegrationTest {
         CountDownLatch messageSystemDisposed = new CountDownLatch(1);
 
         IntStream.range(0, counter).forEach(id -> {
-                    frontendService.getUserData(id, data -> {
-                    });
+                    frontendService.getUserData(id, data -> {});
                     messagesSentLatch.countDown();
                 }
         );
@@ -114,8 +113,8 @@ class IntegrationTest {
 
         HandlersStore requestHandlerDatabaseStore = new HandlersStoreImpl();
         requestHandlerDatabaseStore.addHandler(MessageType.USER_DATA, new GetUserDataRequestHandler(dbService));
-        MsClient databaseMsClient = spy(new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem,
-                requestHandlerDatabaseStore, callbackRegistry));
+        MsClient databaseMsClient = new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem,
+                requestHandlerDatabaseStore, callbackRegistry);
         messageSystem.addClient(databaseMsClient);
 
         //////////////////////////
