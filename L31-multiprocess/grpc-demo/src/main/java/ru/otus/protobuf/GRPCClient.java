@@ -23,14 +23,14 @@ public class GRPCClient {
                 UserMessage.newBuilder().setFirstName("Вася").setLastName("Кириешкин").build()
         );
 
-        System.out.printf("Мы сохранили Васю: {id: %d, name: %s %s}\n",
-                savedUserMsg.getId(), savedUserMsg.getFirstName(), savedUserMsg.getLastName());
+        System.out.println(String.format("Мы сохранили Васю: {id: %d, name: %s %s}",
+                savedUserMsg.getId(), savedUserMsg.getFirstName(), savedUserMsg.getLastName()));
 
         Iterator<UserMessage> allUsersIterator = stub.findAllUsers(Empty.getDefaultInstance());
         System.out.println("Конградулейшенз! Мы получили юзеров! Среди них должен найтись один Вася!");
         allUsersIterator.forEachRemaining(um ->
-                System.out.printf("{id: %d, name: %s %s}\n",
-                        um.getId(), um.getFirstName(), um.getLastName())
+                System.out.println(String.format("{id: %d, name: %s %s}",
+                        um.getId(), um.getFirstName(), um.getLastName()))
         );
 
         channel.shutdown();

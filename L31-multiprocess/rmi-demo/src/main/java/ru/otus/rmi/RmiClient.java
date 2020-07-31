@@ -7,7 +7,7 @@ public class RmiClient {
 
         EchoInterface echoInterface = (EchoInterface) Naming.lookup("//localhost/EchoServer");
         var dataFromServer = echoInterface.echo("hello");
-        System.out.printf("response from the server: %s\n", dataFromServer);
+        System.out.println(String.format("response from the server: %s", dataFromServer));
 
     }
 }

@@ -18,7 +18,7 @@ public class RmiServer extends UnicastRemoteObject implements EchoInterface {
 
     @Override
     public String echo(String data) {
-        System.out.printf("data from client: %s\n", data);
+        System.out.println(String.format("data from client: %s", data));
         return "echo:" + data;
 
     }
