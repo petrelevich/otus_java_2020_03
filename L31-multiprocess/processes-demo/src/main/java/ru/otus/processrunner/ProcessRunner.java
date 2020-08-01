@@ -26,6 +26,7 @@ public class ProcessRunner {
         //simpleJobExecution();
         //jobExecutionWithOutputInterception();
         //compareTwoFilesAsynchronouslyWithAnExternalTool();
+        //printProcessesList();
     }
 
     private static void simpleJobExecution() throws Exception {
@@ -94,6 +95,16 @@ public class ProcessRunner {
 
         Thread.sleep(1000);
         System.out.println("\nend");
+    }
+
+    public static void printProcessesList() {
+        ProcessHandle.allProcesses()
+                .forEach(process -> {
+                    String info = String.format("%8d %s",
+                            process.pid(),
+                            process.info().command().orElse("-"));
+                    System.out.println(info);
+                });
     }
 
     private static void compileJobClass() throws Exception {
