@@ -4,6 +4,7 @@ package ru.otus.processrunner;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -100,9 +101,10 @@ public class ProcessRunner {
     public static void printProcessesList() {
         ProcessHandle.allProcesses()
                 .forEach(process -> {
-                    String info = String.format("%8d %s",
+                    String info = String.format("%8d %s %s",
                             process.pid(),
-                            process.info().command().orElse("-"));
+                            process.info().commandLine().orElse("-"),
+                            Arrays.toString(process.info().arguments().orElse(new String[]{})));
                     System.out.println(info);
                 });
     }
@@ -111,5 +113,4 @@ public class ProcessRunner {
         new ProcessBuilder(JAVAC_CMD, JOB_CLASS_FILE_NAME).directory(new File(SRC_PATH + JOBS_PACKAGE_DIR))
                 .start().waitFor(1, TimeUnit.MINUTES);
     }
-
 }
