@@ -27,7 +27,7 @@ public class ProcessRunner {
         //simpleJobExecution();
         //jobExecutionWithOutputInterception();
         //compareTwoFilesAsynchronouslyWithAnExternalTool();
-        //printProcessesList();
+        printProcessesList();
     }
 
     private static void simpleJobExecution() throws Exception {
@@ -71,7 +71,7 @@ public class ProcessRunner {
     private static void compareTwoFilesAsynchronouslyWithAnExternalTool() throws Exception {
         System.out.println("begin\n");
 
-        boolean isWindows =  System.getProperty("os.name").toLowerCase().contains("windows");
+        boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
         ProcessBuilder processBuilder = isWindows
                 ? new ProcessBuilder("fc", "/N", "file1.txt", "file2.txt")
                 : new ProcessBuilder("cmp", "file1.txt", "file2.txt");
@@ -99,14 +99,19 @@ public class ProcessRunner {
     }
 
     public static void printProcessesList() {
+        //https://stackoverflow.com/questions/46767418/how-to-get-commandline-arguments-of-process-in-java-9
+        boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
         ProcessHandle.allProcesses()
-                .forEach(process -> {
-                    String info = String.format("%8d %s %s",
-                            process.pid(),
-                            process.info().commandLine().orElse("-"),
-                            Arrays.toString(process.info().arguments().orElse(new String[]{})));
-                    System.out.println(info);
-                });
+                .forEach(process -> System.out.println(
+                        isWindows ? String.format("%8d %s",
+                                process.pid(),
+                                process.info().command().orElse("-"))
+
+                                : String.format("%8d %s %s",
+                                process.pid(),
+                                process.info().commandLine().orElse("-"),
+                                Arrays.toString(process.info().arguments().orElse(new String[]{})))
+                ));
     }
 
     private static void compileJobClass() throws Exception {
