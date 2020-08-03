@@ -27,7 +27,7 @@ public class ProcessRunner {
         //simpleJobExecution();
         //jobExecutionWithOutputInterception();
         //compareTwoFilesAsynchronouslyWithAnExternalTool();
-        printProcessesList();
+        //printProcessesList();
     }
 
     private static void simpleJobExecution() throws Exception {
