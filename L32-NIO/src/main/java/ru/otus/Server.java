@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -18,7 +19,7 @@ public class Server {
     }
 
     private void go() {
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+        try (ServerSocket serverSocket = new ServerSocket(PORT, 1000, InetAddress.getLoopbackAddress())) {
             while (!Thread.currentThread().isInterrupted()) {
                 logger.info("waiting for client connection");
                 try (Socket clientSocket = serverSocket.accept()) {
