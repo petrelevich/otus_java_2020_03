@@ -71,8 +71,8 @@ public class ServerNIO {
         logger.info("read from client");
         SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
 
-        String requestFromClient = handleRequest(socketChannel);
         try {
+            String requestFromClient = handleRequest(socketChannel);
             if ("stop".equals(requestFromClient.replace("\r\n", ""))) {
                 socketChannel.close();
             } else {
