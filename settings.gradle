@@ -45,3 +45,4 @@ include 'L31-multiprocess:rmi-demo'
 include 'L31-multiprocess:grpc-demo'
 
 include 'L32-NIO'
+include 'L35-netty'
